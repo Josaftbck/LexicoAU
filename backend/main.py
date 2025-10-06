@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-# Importa tus routers (cuando los crees)
-# from routers import users, recognition, etc
+from routers import auth  # 👈 Aquí importas el router de autenticación
 
 app = FastAPI(
     title="simpAUT API",
@@ -13,7 +11,6 @@ app = FastAPI(
 # Configura CORS
 origins = [
     "http://localhost:5173",  # frontend local
-    # "https://tudominio.com"  # si lo subes a producción
 ]
 
 app.add_middleware(
@@ -24,11 +21,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Punto de prueba básico
+# Agregar router de autenticación
+app.include_router(auth.router)
+
+# Ruta de prueba
 @app.get("/")
 def read_root():
     return {"message": "API simpAUT corriendo correctamente"}
-
-# Incluye routers aquí cuando existan
-# app.include_router(users.router)
-# app.include_router(recognition.router)
