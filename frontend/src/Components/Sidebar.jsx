@@ -1,28 +1,39 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaHome, FaUserAlt, FaCog, FaSignOutAlt, FaChartPie, FaBox } from "react-icons/fa";
-import LogoutButton from "./LOG/LogoutButton";
+import { useAuth } from "../context/AuthContext"; // ✅ usamos el contexto directamente
 import "./Sidebar.css";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleLogout = () => {
+    if (window.confirm("¿Estás seguro que deseas cerrar sesión?")) {
+      logout();
+      navigate("/login", { replace: true });
+    }
+  };
+
   return (
     <div className={`sidebar-container ${isOpen ? "open" : "collapsed"}`}>
+      {/* ======= HEADER ======= */}
       <div className="sidebar-header">
         <div className="sidebar-logo">
           <span className="logo-icon">🌀</span>
-          <span className={`logo-text ${!isOpen && "hidden"}`}>SportGo</span>
+          <span className={`logo-text ${!isOpen && "hidden"}`}>Analisis Lexico</span>
         </div>
         <button className="toggle-btn" onClick={toggleSidebar}>
           <FaBars />
         </button>
       </div>
 
+      {/* ======= NAVIGATION ======= */}
       <ul className="sidebar-nav">
         <li>
           <NavLink to="/dashboard" className="nav-item">
@@ -31,34 +42,33 @@ function Sidebar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/users" className="nav-item">
+          <NavLink to="/dashboard/users" className="nav-item">
             <FaUserAlt className="nav-icon" />
             <span className={`nav-text ${!isOpen && "hidden"}`}>Users</span>
           </NavLink>
         </li>
         <li>
-          <NavLink to="/analytics" className="nav-item">
+          <NavLink to="/dashboard/analytics" className="nav-item">
             <FaChartPie className="nav-icon" />
             <span className={`nav-text ${!isOpen && "hidden"}`}>Analytics</span>
           </NavLink>
         </li>
         <li>
-          <NavLink to="/inventory" className="nav-item">
-            <FaBox className="nav-icon" />
-            <span className={`nav-text ${!isOpen && "hidden"}`}>Inventory</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/settings" className="nav-item">
+          <NavLink to="/dashboard/settings" className="nav-item">
             <FaCog className="nav-icon" />
             <span className={`nav-text ${!isOpen && "hidden"}`}>Settings</span>
           </NavLink>
         </li>
       </ul>
 
+      {/* ======= FOOTER ======= */}
       <div className="sidebar-footer">
-        <LogoutButton />
-        <FaSignOutAlt className="nav-icon logout-icon" />
+        <FaSignOutAlt
+          className="nav-icon logout-icon"
+          onClick={handleLogout}
+          title="Cerrar sesión"
+        />
+         <span className={`logo-text ${!isOpen && "hidden"}`}>Cerrar sesion</span>
       </div>
     </div>
   );

@@ -1,43 +1,47 @@
-// context/AuthContext.jsx
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(() => {
+    // ✅ Recupera usuario del localStorage si existe
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
+  const [token, setToken] = useState(() => localStorage.getItem("token") || null);
+
+  // ✅ Guardar sesión en localStorage cada vez que cambie
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+    if (user && token) {
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
     }
-  }, []);
+  }, [user, token]);
 
-  const login = (data) => {
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    setToken(data.token);
-    setUser(data.user);
+  // ✅ Función de login (se llama desde tu componente Login.jsx)
+  const login = (userData, authToken) => {
+    setUser(userData);
+    setToken(authToken);
   };
 
+  // ✅ Función de logout (para el Sidebar o LogoutButton)
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setToken(null);
     setUser(null);
+    setToken(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
   };
-
-  const isAuthenticated = () => !!token;
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
+// Hook para acceder más fácil
 export const useAuth = () => useContext(AuthContext);

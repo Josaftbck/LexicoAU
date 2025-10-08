@@ -1,0 +1,136 @@
+:root {
+  --primary-color: #6a11cb;
+  --secondary-color: #2575fc;
+}
+
+/* ====== CONTENEDOR PRINCIPAL ====== */
+.home-container {
+  background: linear-gradient(
+    145deg,
+    rgba(106, 17, 203, 0.08),
+    rgba(37, 117, 252, 0.08)
+  );
+  border-radius: 18px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  color: #333;
+  backdrop-filter: blur(12px);
+  animation: fadeIn 0.7s ease;
+}
+
+/* ====== TITULOS ====== */
+.home-title {
+  font-weight: 700;
+  font-size: 2rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.home-subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  max-width: 650px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+/* ====== TARJETAS ====== */
+.home-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.home-card {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 2rem 2.5rem;
+  border-radius: 14px;
+  min-width: 220px;
+  color: #fff;
+  background-image: linear-gradient(
+    160deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-25deg);
+  transition: left 0.6s ease;
+}
+
+.home-card:hover::after {
+  left: 125%;
+}
+
+.home-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Variante con degradado invertido */
+.home-card.alt {
+  background-image: linear-gradient(
+    160deg,
+    var(--secondary-color),
+    var(--primary-color)
+  );
+}
+
+/* ====== TEXTOS DE LAS TARJETAS ====== */
+.home-card h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.home-card p {
+  font-size: 0.95rem;
+  opacity: 0.95;
+  margin: 0;
+}
+
+/* ====== ANIMACIONES ====== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  .home-container {
+    padding: 2rem 1rem;
+  }
+
+  .home-card {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .home-title {
+    font-size: 1.6rem;
+  }
+}

@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/LOG/Login';
-import Register from './components/LOG/Register';
+import Register from './Components/LOG/Register';
 import DashboardApp from './components/DashboardApp';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
-import Sidebar from './components/Sidebar'; // ✅ Importamos el nuevo Sidebar
+import Sidebar from './Components/Sidebar'; // ✅ Importamos el nuevo Sidebar
 import './components/Sidebar.css'; // ✅ Importamos su CSS
 
 function App() {
