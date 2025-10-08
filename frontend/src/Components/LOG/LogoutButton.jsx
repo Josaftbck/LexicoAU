@@ -1,7 +1,7 @@
-// components/LogoutButton.jsx
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { FaSignOutAlt } from 'react-icons/fa';
+import './LogoutButton.css'; // ✅ nuevo archivo de estilos
 
 function LogoutButton() {
   const { logout } = useAuth();
@@ -15,11 +15,12 @@ function LogoutButton() {
   };
 
   return (
-    <button onClick={handleLogout} className="btn btn-danger d-flex align-items-center">
-      <FaSignOutAlt className="me-2" />
-      Cerrar sesión
+    <button className="logout-btn" onClick={handleLogout}>
+      <FaSignOutAlt className="logout-icon" />
+      <span className="logout-text">Cerrar sesión</span>
     </button>
   );
 }
 
 export default LogoutButton;
+

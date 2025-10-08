@@ -1,21 +1,17 @@
-import { Routes, Route } from 'react-router-dom';
-import AppNavbar from './Navbar';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../pages/Home';
-
 
 
 function DashboardApp() {
   return (
-    <>
-      <AppNavbar /> {/* Navbar solo dentro del dashboard */}
-      <div className="container mt-4">
-        <Routes>
-<Route index element={<Home />} />  {/* Ruta principal del dashboard */}
+    <div className="dashboard-content">
+      <Routes>
+        {/* Ruta principal del dashboard */}
+        <Route index element={<Home />} />
 
-
-        </Routes>
-      </div>
-    </>
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </div>
   );
 }
 

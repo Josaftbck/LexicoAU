@@ -1,38 +1,43 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './Components/LOG/Login';
-import DashboardApp from './Components/DashboardApp';
+import Login from './components/LOG/Login';
+import Register from './components/LOG/Register';
+import DashboardApp from './components/DashboardApp';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
-import Register from './components/LOG/Register';
-
+import Sidebar from './components/Sidebar'; // ✅ Importamos el nuevo Sidebar
+import './components/Sidebar.css'; // ✅ Importamos su CSS
 
 function App() {
-
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Redirección de "/" a "/login" */}
+          {/* Redirección inicial */}
           <Route path="/" element={<Navigate to="/login" replace />} />
 
-          {/* Login público */}
+          {/* Páginas públicas */}
           <Route path="/login" element={<Login />} />
-          {/* Login público */}
-          <Route path="/Register" element={<Register />} />
+          <Route path="/register" element={<Register />} />
 
-          {/* Dashboard protegido */}
+          {/* Sección protegida */}
           <Route
             path="/dashboard/*"
             element={
               <ProtectedRoute>
-                <DashboardApp />
+                {/* ✅ Envolvemos el Dashboard con el Sidebar */}
+                <div style={{ display: 'flex', minHeight: '100vh' }}>
+                  <Sidebar />
+                  <main style={{ flex: 1, padding: '2rem', background: '#f9f9f9' }}>
+                    <DashboardApp />
+                  </main>
+                </div>
               </ProtectedRoute>
             }
           />
         </Routes>
       </Router>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;
