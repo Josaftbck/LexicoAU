@@ -10,8 +10,8 @@ function Register() {
     usuario: '',
     password: '',
     email: '',
-    nombreCompleto: '',
-    telefono: '' // ✅ nuevo campo
+    nombre_completo: '',
+    telefono: ''
   });
 
   const [error, setError] = useState('');
@@ -30,22 +30,22 @@ function Register() {
     setError('');
     setSuccess('');
 
-    // Validación simple del teléfono
+    // Validación simple del teléfono (8 dígitos exactos)
     if (!/^\d{8}$/.test(formData.telefono)) {
-      setError('El número de teléfono debe contener exactamente 10 dígitos.');
+      setError('El número de teléfono debe contener exactamente 8 dígitos.');
       setIsLoading(false);
       return;
     }
 
     try {
-      await axios.post('http://localhost:5248/api/auth/register', formData);
+      await axios.post('http://localhost:8000/register', formData);
       setSuccess('✅ Registro exitoso. Redirigiendo al login...');
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       console.error('Error al registrar:', err);
       setError(
-        err.response?.data?.message ||
-          'Error al registrar usuario. Verifica los datos ingresados.'
+        err.response?.data?.detail ||
+        'Error al registrar usuario. Verifica los datos ingresados.'
       );
     } finally {
       setIsLoading(false);
@@ -105,8 +105,8 @@ function Register() {
               <input
                 type="text"
                 className="form-control"
-                name="nombreCompleto"
-                value={formData.nombreCompleto}
+                name="nombre_completo"
+                value={formData.nombre_completo}
                 onChange={handleChange}
                 required
                 placeholder="Nombre completo"
@@ -125,7 +125,7 @@ function Register() {
                 value={formData.telefono}
                 onChange={handleChange}
                 required
-                placeholder="Número de teléfono (10 dígitos)"
+                placeholder="Número de teléfono (8 dígitos)"
                 maxLength="8"
               />
             </div>
