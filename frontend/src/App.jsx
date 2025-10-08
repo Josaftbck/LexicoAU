@@ -1,11 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/LOG/Login';
-import Register from './Components/LOG/Register';
-import DashboardApp from './components/DashboardApp';
+import Login from './Components/auth/Login';
+import Register from './Components/auth/Register';
+import DashboardApp from './Components/common/DashboardApp';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
-import Sidebar from './Components/Sidebar';
-import './components/Sidebar.css';
+import Sidebar from './Components/common/Sidebar';
+import './components/common/Sidebar.css';
+
 
 function App() {
   return (
@@ -33,8 +34,9 @@ function App() {
               </ProtectedRoute>
             }
           />
+        
         </Routes>
-      </AuthProvider>
+        </AuthProvider>
     </Router>
   );
 }

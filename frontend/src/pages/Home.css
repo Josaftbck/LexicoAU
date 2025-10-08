@@ -1,20 +1,24 @@
+/* Home.css — Tema Eco Wellness 🌿 */
 :root {
-  --primary-color: #6a11cb;
-  --secondary-color: #2575fc;
+  --primary-color: #4caf50;      /* Verde medio - acento natural */
+  --secondary-color: #81c784;    /* Verde suave - contraste orgánico */
+  --background-color: #a8e6cf;   /* Verde menta - fondo dominante */
+  --text-dark: #1b5e20;          /* Verde oscuro - texto principal */
+  --text-light: #f8f8f8;         /* Blanco cálido */
 }
 
 /* ====== CONTENEDOR PRINCIPAL ====== */
 .home-container {
   background: linear-gradient(
     145deg,
-    rgba(106, 17, 203, 0.08),
-    rgba(37, 117, 252, 0.08)
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.7)
   );
   border-radius: 18px;
   padding: 3rem 2rem;
   text-align: center;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  color: #333;
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
+  color: var(--text-dark);
   backdrop-filter: blur(12px);
   animation: fadeIn 0.7s ease;
 }
@@ -27,14 +31,16 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
+  letter-spacing: -0.02em;
 }
 
 .home-subtitle {
   font-size: 1.1rem;
-  color: #555;
+  color: #33691e;
   max-width: 650px;
   margin: 0 auto 2rem;
   line-height: 1.6;
+  opacity: 0.9;
 }
 
 /* ====== TARJETAS ====== */
@@ -46,24 +52,25 @@
 }
 
 .home-card {
-  background: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(76, 175, 80, 0.25);
   padding: 2rem 2.5rem;
-  border-radius: 14px;
+  border-radius: 16px;
   min-width: 220px;
-  color: #fff;
+  color: var(--text-dark);
   background-image: linear-gradient(
     160deg,
-    var(--primary-color),
+    var(--background-color),
     var(--secondary-color)
   );
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.15);
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
   overflow: hidden;
 }
 
+/* ✨ Efecto de brillo suave */
 .home-card::after {
   content: "";
   position: absolute;
@@ -71,7 +78,7 @@
   left: -75%;
   width: 50%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   transform: skewX(-25deg);
   transition: left 0.6s ease;
 }
@@ -82,7 +89,7 @@
 
 .home-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(76, 175, 80, 0.25);
 }
 
 /* Variante con degradado invertido */
@@ -98,12 +105,14 @@
 .home-card h3 {
   font-size: 1.3rem;
   font-weight: 600;
+  color: var(--text-dark);
   margin-bottom: 0.6rem;
 }
 
 .home-card p {
   font-size: 0.95rem;
-  opacity: 0.95;
+  color: #33691e;
+  opacity: 0.9;
   margin: 0;
 }
 

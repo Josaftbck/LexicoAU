@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaHome, FaUserAlt, FaCog, FaSignOutAlt, FaChartPie, FaBox } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext"; // ✅ usamos el contexto directamente
+import { useAuth } from "../../context/AuthContext"; // ✅ usamos el contexto directamente
 import "./Sidebar.css";
 
 function Sidebar() {
@@ -25,8 +25,7 @@ function Sidebar() {
       {/* ======= HEADER ======= */}
       <div className="sidebar-header">
         <div className="sidebar-logo">
-          <span className="logo-icon">🌀</span>
-          <span className={`logo-text ${!isOpen && "hidden"}`}>Analisis Lexico</span>
+          <span className={`logo-text ${!isOpen && "hidden"}`}>Lexion</span>
         </div>
         <button className="toggle-btn" onClick={toggleSidebar}>
           <FaBars />

@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import './Login.css';
 import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa';
+import logo from "../../assets/lexion_icon.png"; // 🌀 tu nuevo logo
 
 function Login() {
   const [usuario, setUsuario] = useState('');
@@ -56,11 +57,13 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-card shadow">
-        <div className="login-header text-center mb-3">
-          <h2>Bienvenido</h2>
-          <p>Ingresa tus credenciales para continuar</p>
-        </div>
-
+ 
+          {/* 🔹 Logo y título */}
+          <div className="login-header">
+            <img src={logo} alt="Lexion Logo" className="login-logo" />
+            <h1 className="login-title">Lexion</h1>
+            <p className="login-subtitle">Enter your intelligent workspace</p>
+          </div>
         <div className="login-body">
           {error && (
             <div className="alert alert-danger text-center py-2 error-message">
