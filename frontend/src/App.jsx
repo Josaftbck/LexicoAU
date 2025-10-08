@@ -6,6 +6,7 @@ import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Sidebar from './Components/common/Sidebar';
 import './components/common/Sidebar.css';
+import RegisterFacial from './Components/auth/RegisterFacial';'./Components/auth/RegisterFacial';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           {/* Páginas públicas */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/registerfacial" element={<RegisterFacial />} />
 
           {/* Sección protegida */}
           <Route

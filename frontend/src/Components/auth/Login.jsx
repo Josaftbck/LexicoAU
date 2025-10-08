@@ -127,7 +127,7 @@ function Login() {
                 background: 'none',
                 border: 'none',
               }}
-              onClick={() => navigate('/register')}
+              onClick={() => navigate('/registerfacial')}
             >
               Crear cuenta
             </button>

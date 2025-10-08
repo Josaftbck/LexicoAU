@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import auth  # 👈 Aquí importas el router de autenticación
+from routers import register_facial 
 
 app = FastAPI(
     title="simpAUT API",
@@ -23,6 +24,7 @@ app.add_middleware(
 
 # Agregar router de autenticación
 app.include_router(auth.router)
+app.include_router(register_facial.router)
 
 # Ruta de prueba
 @app.get("/")

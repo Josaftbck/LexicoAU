@@ -171,6 +171,21 @@ function Register() {
             >
               Inicia sesión
             </button>
+
+          </p>
+          <p>
+                        <button
+              className="btn btn-link p-0"
+              style={{
+                color: '#0d6efd',
+                textDecoration: 'underline',
+                background: 'none',
+                border: 'none'
+              }}
+              onClick={() => navigate('/registerfacial')}
+            >
+              Registro Facial
+            </button>
           </p>
         </div>
       </div>
