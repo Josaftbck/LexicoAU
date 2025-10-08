@@ -4,13 +4,13 @@ import Register from './Components/LOG/Register';
 import DashboardApp from './components/DashboardApp';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
-import Sidebar from './Components/Sidebar'; // ✅ Importamos el nuevo Sidebar
-import './components/Sidebar.css'; // ✅ Importamos su CSS
+import Sidebar from './Components/Sidebar';
+import './components/Sidebar.css';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider> {/* ✅ Ahora dentro del Router */}
         <Routes>
           {/* Redirección inicial */}
           <Route path="/" element={<Navigate to="/login" replace />} />
@@ -24,7 +24,6 @@ function App() {
             path="/dashboard/*"
             element={
               <ProtectedRoute>
-                {/* ✅ Envolvemos el Dashboard con el Sidebar */}
                 <div style={{ display: 'flex', minHeight: '100vh' }}>
                   <Sidebar />
                   <main style={{ flex: 1, padding: '2rem', background: '#f9f9f9' }}>
@@ -35,8 +34,8 @@ function App() {
             }
           />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

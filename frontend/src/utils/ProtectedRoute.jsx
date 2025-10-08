@@ -2,9 +2,17 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function ProtectedRoute({ children }) {
-  const { token } = useAuth();
+  const { token, loading } = useAuth();
 
-  // Si no hay token => redirige al login
+  // 👇 Espera a que AuthContext termine de cargar localStorage
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "20%" }}>
+        <h3>Cargando sesión...</h3>
+      </div>
+    );
+  }
+
   if (!token) {
     return <Navigate to="/login" replace />;
   }
