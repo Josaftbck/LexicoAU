@@ -6,7 +6,6 @@ from models.autenticacion_facial import AutenticacionFacial
 from schemas.usuario import UsuarioCreate, UsuarioLogin
 from utils.security import hash_password, verify_password
 from utils.jwt_manager import create_access_token, verify_access_token
-from utils.luxand_api import verify_face, register_face
 from utils.image_tools import redimensionar_imagen_base64
 import base64
 from datetime import datetime
@@ -98,7 +97,8 @@ def verificar_rostro(
     usuario_id: int = Form(...),
     db: Session = Depends(get_db)
 ):
-    # Buscar usuario
+    # Buscar usuario npm run dev
+
     empleado = db.query(Usuario).filter(Usuario.id == usuario_id).first()
     if not empleado:
         raise HTTPException(status_code=404, detail="❌ Usuario no encontrado")

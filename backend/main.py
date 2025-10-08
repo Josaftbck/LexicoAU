@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth  # 👈 Aquí importas el router de autenticación
-from routers import register_facial 
+from routers import auth, register_facial, rostro  # 👈 agregamos rostro
 
 app = FastAPI(
     title="simpAUT API",
@@ -9,9 +8,12 @@ app = FastAPI(
     description="Backend REST API for simpAUT - Automata Recognition System"
 )
 
-# Configura CORS
+# ============================================================
+# 🔹 Configurar CORS (para conexión con React)
+# ============================================================
 origins = [
-    "http://localhost:5173",  # frontend local
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 
 app.add_middleware(
@@ -22,11 +24,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Agregar router de autenticación
+# ============================================================
+# 🔹 Incluir routers
+# ============================================================
 app.include_router(auth.router)
 app.include_router(register_facial.router)
+app.include_router(rostro.router)  # 👈 ahora sí se activa /rostro/login
 
-# Ruta de prueba
+# ============================================================
+# 🔹 Ruta de prueba
+# ============================================================
 @app.get("/")
 def read_root():
-    return {"message": "API simpAUT corriendo correctamente"}
+    return {"message": "API simpAUT corriendo correctamente ✅"}
