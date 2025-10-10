@@ -101,6 +101,7 @@
   padding: 2rem;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 22px 22px 0 0;
+  
 }
 
 .login-form .form-group {
@@ -247,4 +248,20 @@
     width: 90px;
     height: 90px;
   }
+}
+/* 🔒 Ocultar el botón nativo de mostrar contraseña (Chrome, Edge, Safari) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-clear-button,
+input[type="password"]::-webkit-reveal {
+  display: none;
+  appearance: none;
+}
+
+.facial-login {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  backdrop-filter: blur(8px);
 }

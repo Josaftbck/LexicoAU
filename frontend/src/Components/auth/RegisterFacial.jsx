@@ -1,20 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaCamera, FaUserPlus, FaUser, FaLock, FaEnvelope, FaPhone } from "react-icons/fa";
+import { FaCamera, FaUserPlus, FaUser, FaLock, FaEnvelope, FaPhone, FaEye, FaEyeSlash } from "react-icons/fa";
 import "./Login.css";
+
 
 function RegisterFacial() {
   const navigate = useNavigate();
   const videoRef = useRef(null);
+
   const [snapshot, setSnapshot] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     usuario: "",
     password: "",
+    confirmPassword: "",
     email: "",
     nombre_completo: "",
-    telefono: ""
+    telefono: "",
   });
+
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -35,7 +42,6 @@ function RegisterFacial() {
     startCamera();
 
     return () => {
-      // Detener cámara al salir
       if (videoRef.current?.srcObject) {
         videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
       }
@@ -70,6 +76,7 @@ function RegisterFacial() {
     setError("");
     setSuccess("");
 
+    // Validaciones previas
     if (!snapshot) {
       setError("Debes capturar una foto antes de registrarte.");
       setIsLoading(false);
@@ -82,10 +89,25 @@ function RegisterFacial() {
       return;
     }
 
+    if (formData.password !== formData.confirmPassword) {
+      setError("Las contraseñas no coinciden.");
+      setIsLoading(false);
+      return;
+    }
+
+  // ✅ Solo permitir correos Gmail
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+  if (!gmailRegex.test(formData.email)) {
+    setError("Solo se permiten correos @gmail.com");
+    return;
+  }
+
+
     try {
       const formToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
-        formToSend.append(key, value);
+        if (key !== "confirmPassword") formToSend.append(key, value);
       });
       formToSend.append("rostro", snapshot, "rostro.jpg");
 
@@ -106,6 +128,11 @@ function RegisterFacial() {
     }
   };
 
+  // ===== Validaciones de contraseña =====
+  const passwordsFilled = formData.password && formData.confirmPassword;
+  const passwordsMatch = formData.password === formData.confirmPassword;
+  const canSubmit = passwordsFilled && passwordsMatch;
+
   return (
     <div className="login-container">
       <div className="login-card" style={{ maxWidth: "900px" }}>
@@ -116,7 +143,7 @@ function RegisterFacial() {
 
         <div className="login-body">
           <div className="row align-items-center">
-            {/* 📸 Cámara a la izquierda */}
+            {/* 📸 Cámara */}
             <div className="col-md-6 text-center mb-4">
               <video
                 ref={videoRef}
@@ -126,7 +153,7 @@ function RegisterFacial() {
               ></video>
               <button
                 type="button"
-                className="btn btn-primary mt-3"
+                className="btn btn-success mt-3"
                 onClick={tomarFoto}
               >
                 <FaCamera className="me-2" /> Capturar Rostro
@@ -138,7 +165,7 @@ function RegisterFacial() {
               )}
             </div>
 
-            {/* 📝 Formulario a la derecha */}
+            {/* 📝 Formulario */}
             <div className="col-md-6">
               {error && <div className="alert alert-danger">{error}</div>}
               {success && <div className="alert alert-success">{success}</div>}
@@ -161,7 +188,7 @@ function RegisterFacial() {
 
                 <div className="form-group">
                   <label className="form-label">
-                    <FaEnvelope className="me-2" /> Correo
+                    <FaEnvelope className="me-2" /> Correo electrónico
                   </label>
                   <input
                     type="email"
@@ -170,7 +197,7 @@ function RegisterFacial() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    placeholder="Correo electrónico"
+                    placeholder="correo electronico"
                   />
                 </div>
 
@@ -205,25 +232,73 @@ function RegisterFacial() {
                   />
                 </div>
 
+                {/* 🔒 Contraseña */}
                 <div className="form-group">
                   <label className="form-label">
                     <FaLock className="me-2" /> Contraseña
                   </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                    placeholder="Crea una contraseña"
-                  />
+                  <div className="input-group">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-control"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                      minLength={8}
+                      autoComplete="new-password"
+                      placeholder="Crea una contraseña"
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => setShowPassword(!showPassword)}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
+                  <small className="form-text text-muted">
+                    Mínimo 8 caracteres.
+                  </small>
+                </div>
+
+                {/* 🔐 Confirmar contraseña */}
+                <div className="form-group mt-3">
+                  <label className="form-label">
+                    <FaLock className="me-2" /> Confirmar contraseña
+                  </label>
+                  <div className="input-group">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      className={`form-control ${
+                        passwordsFilled && !passwordsMatch ? "is-invalid" : ""
+                      }`}
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required
+                      autoComplete="new-password"
+                      placeholder="Vuelve a escribir la contraseña"
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      tabIndex={-1}
+                    >
+                      {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                    <div className="invalid-feedback">
+                      Las contraseñas no coinciden.
+                    </div>
+                  </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="btn btn-success w-100"
-                  disabled={isLoading}
+                  className="btn btn-success w-100 mt-4"
+                  disabled={isLoading || !canSubmit}
                 >
                   {isLoading ? "Registrando..." : (
                     <>
@@ -245,7 +320,7 @@ function RegisterFacial() {
                 color: "#0d6efd",
                 textDecoration: "underline",
                 background: "none",
-                border: "none"
+                border: "none",
               }}
               onClick={() => navigate("/login")}
             >

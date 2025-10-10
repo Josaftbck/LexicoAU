@@ -5,6 +5,7 @@ import axios from "axios";
 import "./Login.css";
 import { FaUser, FaLock, FaSignInAlt, FaCamera, FaArrowLeft } from "react-icons/fa";
 import logo from "../../assets/lexion_icon.png";
+import { motion, AnimatePresence } from "framer-motion"; // 👈 asegúrate de tener esta importación
 
 function Login() {
   const [usuario, setUsuario] = useState("");
@@ -55,6 +56,9 @@ function Login() {
     }
   };
 
+
+
+  
   // ============================================================
   // 🔹 LOGIN FACIAL (Reconocimiento con cámara)
   // ============================================================
@@ -119,23 +123,33 @@ function Login() {
     }
   };
 
-  // ============================================================
-  // 🔹 INTERFAZ VISUAL
-  // ============================================================
-  return (
-    <div className="login-container">
-      <div className="login-card shadow">
-        <div className="login-header">
-          <img src={logo} alt="Lexion Logo" className="login-logo" />
-          <h1 className="login-title">Lexion</h1>
-          <p className="login-subtitle">Enter your intelligent workspace</p>
-        </div>
+// ============================================================
+// 🔹 INTERFAZ VISUAL (con animación de transición)
+// ============================================================
 
-        <div className="login-body">
-          {/* 🧩 MODO LOGIN NORMAL */}
+return (
+  <div className="login-container">
+    <div className="login-card shadow">
+      <div className="login-header">
+        <img src={logo} alt="Lexion Logo" className="login-logo" />
+        <h1 className="login-title">Lexion</h1>
+        <p className="login-subtitle">Enter your intelligent workspace</p>
+      </div>
+
+      <div className="login-body">
+        <AnimatePresence mode="wait">
+          {/* 🧩 LOGIN NORMAL */}
           {!modoFacial ? (
-            <>
-              {error && <div className="alert alert-danger text-center">{error}</div>}
+            <motion.div
+              key="modoNormal"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            >
+              {error && (
+                <div className="alert alert-danger text-center">{error}</div>
+              )}
 
               <form className="login-form" onSubmit={handleSubmit}>
                 <div className="form-group mb-3">
@@ -168,7 +182,7 @@ function Login() {
 
                 <button
                   type="submit"
-                  className="btn btn-primary w-100"
+                  className="btn login-btn w-100"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -187,10 +201,17 @@ function Login() {
               >
                 <FaCamera className="me-2" /> Ingresar con Rostro
               </button>
-            </>
+            </motion.div>
           ) : (
-            // 🧩 MODO LOGIN FACIAL
-            <div className="text-center">
+            // 🧩 LOGIN FACIAL (con animación desde arriba)
+            <motion.div
+              key="modoFacial"
+              className="text-center facial-login"
+              initial={{ y: "-100%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: "-100%", opacity: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
               <video
                 ref={videoRef}
                 className="rounded shadow mb-3"
@@ -221,33 +242,35 @@ function Login() {
                   <FaArrowLeft className="me-2" /> Volver
                 </button>
               </div>
-            </div>
+            </motion.div>
           )}
-        </div>
-
-        {/* 🔹 Pie del login (solo visible en modo normal) */}
-        {!modoFacial && (
-          <div className="login-footer text-center mt-3">
-            <p>
-              ¿No tienes cuenta?{" "}
-              <button
-                className="btn btn-link p-0"
-                style={{
-                  color: "#0d6efd",
-                  textDecoration: "underline",
-                  background: "none",
-                  border: "none",
-                }}
-                onClick={() => navigate("/registerfacial")}
-              >
-                Crear cuenta
-              </button>
-            </p>
-          </div>
-        )}
+        </AnimatePresence>
       </div>
+
+      {/* 🔹 Pie del login (solo visible en modo normal) */}
+      {!modoFacial && (
+        <div className="login-footer text-center mt-3">
+          <p>
+            ¿No tienes cuenta?{" "}
+            <button
+              className="btn btn-link p-0"
+              style={{
+                color: "#0d6efd",
+                textDecoration: "underline",
+                background: "none",
+                border: "none",
+              }}
+              onClick={() => navigate("/registerfacial")}
+            >
+              Crear cuenta
+            </button>
+          </p>
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
+
 }
 
 export default Login;
