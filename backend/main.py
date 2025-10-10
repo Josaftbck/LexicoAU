@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth, register_facial, rostro, login_qr, logout
+from routers import auth, register_facial, rostro, login_qr, logout, credencial
 from dotenv import load_dotenv
 import os
+from starlette.middleware import Middleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+from starlette.requests import Request
+from starlette.responses import Response
+from starlette.datastructures import UploadFile
 
 # ============================================================
 # 🌎 Cargar variables de entorno (.env.local o .env.prod)
@@ -20,6 +25,7 @@ app = FastAPI(
     title="simpAUT API",
     version="1.0.0",
     description="Backend REST API for simpAUT - Automata Recognition System"
+    
 )
 
 # ============================================================
@@ -40,6 +46,17 @@ app.add_middleware(
 )
 
 # ============================================================
+# 🧩 Middleware para permitir archivos grandes (hasta 50 MB)
+# ============================================================
+@app.middleware("http")
+async def limit_request_body(request: Request, call_next):
+    body = await request.body()
+    if len(body) > 50 * 1024 * 1024:  # 50 MB
+        return Response("❌ Archivo demasiado grande (>50 MB)", status_code=413)
+    request._body = body
+    return await call_next(request)
+
+# ============================================================
 # 🔹 Incluir routers del sistema
 # ============================================================
 app.include_router(auth.router)
@@ -47,6 +64,7 @@ app.include_router(register_facial.router)
 app.include_router(rostro.router)
 app.include_router(login_qr.router)
 app.include_router(logout.router)
+app.include_router(credencial.router)
 
 # ============================================================
 # 🧠 Ruta de prueba (verifica si la API está activa)

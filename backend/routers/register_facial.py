@@ -159,5 +159,6 @@ async def register_facial_user(
         "usuario_id": nuevo_usuario.id,
         "email": nuevo_usuario.email,
         "qr_url": qr_text,
-        "qr_hash": qr_hash
+        "qr_hash": qr_hash,
+        "rostro_segmentado_b64": rostro_segmentado_b64  # 👈 añade esto
     }

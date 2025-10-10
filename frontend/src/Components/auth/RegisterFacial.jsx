@@ -70,63 +70,76 @@ function RegisterFacial() {
   };
 
   // ===== Enviar formulario =====
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-    setSuccess("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError("");
+  setSuccess("");
 
-    // Validaciones previas
-    if (!snapshot) {
-      setError("Debes capturar una foto antes de registrarte.");
-      setIsLoading(false);
-      return;
-    }
-
-    if (!/^\d{8}$/.test(formData.telefono)) {
-      setError("El número de teléfono debe contener exactamente 8 dígitos.");
-      setIsLoading(false);
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Las contraseñas no coinciden.");
-      setIsLoading(false);
-      return;
-    }
-
-  // ✅ Solo permitir correos Gmail
-  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-
-  if (!gmailRegex.test(formData.email)) {
-    setError("Solo se permiten correos @gmail.com");
+  // Validaciones previas
+  if (!snapshot) {
+    setError("Debes capturar una foto antes de registrarte.");
+    setIsLoading(false);
     return;
   }
 
+  if (!/^\d{8}$/.test(formData.telefono)) {
+    setError("El número de teléfono debe contener exactamente 8 dígitos.");
+    setIsLoading(false);
+    return;
+  }
 
-    try {
-      const formToSend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key !== "confirmPassword") formToSend.append(key, value);
-      });
-      formToSend.append("rostro", snapshot, "rostro.jpg");
+  if (formData.password !== formData.confirmPassword) {
+    setError("Las contraseñas no coinciden.");
+    setIsLoading(false);
+    return;
+  }
 
-      await axios.post("http://localhost:8000/register-facial", formToSend, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+  // Solo correos Gmail
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  if (!gmailRegex.test(formData.email)) {
+    setError("Solo se permiten correos @gmail.com");
+    setIsLoading(false);
+    return;
+  }
 
-      setSuccess("✅ Registro facial exitoso. Redirigiendo al login...");
-      setTimeout(() => navigate("/login"), 2000);
-    } catch (err) {
-      console.error("Error al registrar:", err);
-      setError(
-        err.response?.data?.detail ||
-          "Error al registrar usuario. Verifica los datos ingresados."
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  try {
+    const formToSend = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key !== "confirmPassword") formToSend.append(key, value);
+    });
+    formToSend.append("rostro", snapshot, "rostro.jpg");
+
+    // ✅ SIN headers manuales
+    const response = await axios.post("http://localhost:8000/register-facial/", formToSend);
+    const data = response.data;
+    setSuccess("✅ Registro facial exitoso. Redirigiendo...");
+
+    // (Opcional) Navega al editor de credenciales
+    const userData = {
+      id: response.data.usuario_id,
+      email: formData.email,
+      telefono: formData.telefono,
+      nombre: formData.nombre_completo,
+      nickname: formData.usuario,
+      foto: `data:image/jpeg;base64,${data.rostro_segmentado_b64}`, // ✅ usar la segmentada,
+      qr_url: response.data.qr_url,
+    };
+    navigate("/credencial", { state: { userData } });
+
+  } catch (err) {
+    console.error("Error al registrar:", err?.response?.data || err);
+    setError(
+      err?.response?.data?.detail ||
+      err?.response?.data?.mensaje ||
+      "Error al registrar usuario. Verifica los datos ingresados."
+    );
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
 
   // ===== Validaciones de contraseña =====
   const passwordsFilled = formData.password && formData.confirmPassword;
@@ -325,6 +338,21 @@ function RegisterFacial() {
               onClick={() => navigate("/login")}
             >
               Inicia sesión
+            </button>
+            </p>
+          <p>
+            validar credencial{" "}
+            <button
+              className="btn btn-link p-0"
+              style={{
+                color: "#0d6efd",
+                textDecoration: "underline",
+                background: "none",
+                border: "none",
+              }}
+              onClick={() => navigate("/credencial")}
+            >
+              redireccion 
             </button>
           </p>
         </div>
