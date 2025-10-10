@@ -1,11 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react"; // 👈 agrega useEffect aquí
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import "./Login.css";
 import { FaUser, FaLock, FaSignInAlt, FaCamera, FaArrowLeft } from "react-icons/fa";
 import logo from "../../assets/lexion_icon.png";
-import { motion, AnimatePresence } from "framer-motion"; // 👈 asegúrate de tener esta importación
+import { motion, AnimatePresence } from "framer-motion";
 
 function Login() {
   const [usuario, setUsuario] = useState("");
@@ -56,9 +56,6 @@ function Login() {
     }
   };
 
-
-
-  
   // ============================================================
   // 🔹 LOGIN FACIAL (Reconocimiento con cámara)
   // ============================================================
@@ -102,7 +99,7 @@ function Login() {
       if (data.coincide) {
         setMensajeFacial(`✅ Bienvenido ${data.nombre}`);
         login({
-          token: "TOKEN_FACIAL", // aquí podrías recibir un JWT real en el futuro
+          token: "TOKEN_FACIAL", // o el JWT real que devuelva tu backend
           user: {
             id: data.usuario_id,
             nombre: data.nombre,
@@ -122,6 +119,19 @@ function Login() {
       setIsLoading(false);
     }
   };
+
+  // ============================================================
+  // 🧠 AUTOEJECUCIÓN DE DETECCIÓN FACIAL
+  // ============================================================
+  useEffect(() => {
+    if (modoFacial) {
+      const timer = setTimeout(() => {
+        handleLoginFacial();
+      }, 500); // medio segundo después de mostrar la cámara
+
+      return () => clearTimeout(timer);
+    }
+  }, [modoFacial]);
 
 // ============================================================
 // 🔹 INTERFAZ VISUAL (con animación de transición)
@@ -204,45 +214,32 @@ return (
             </motion.div>
           ) : (
             // 🧩 LOGIN FACIAL (con animación desde arriba)
-            <motion.div
-              key="modoFacial"
-              className="text-center facial-login"
-              initial={{ y: "-100%", opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: "-100%", opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              <video
-                ref={videoRef}
-                className="rounded shadow mb-3"
-                autoPlay
-                muted
-                width="250"
-              />
-              {mensajeFacial && <p>{mensajeFacial}</p>}
+<motion.div
+  key="modoFacial"
+  className="text-center facial-login"
+  initial={{ y: "-100%", opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  exit={{ y: "-100%", opacity: 0 }}
+  transition={{ duration: 0.5, ease: "easeOut" }}
+>
+  <video
+    ref={videoRef}
+    className="rounded shadow mb-3"
+    autoPlay
+    muted
+    width="250"
+  />
+  {mensajeFacial && <p>{mensajeFacial}</p>}
 
-              <div className="d-flex justify-content-center gap-2 mt-3">
-                <button
-                  className="btn btn-success"
-                  disabled={isLoading}
-                  onClick={handleLoginFacial}
-                >
-                  {isLoading ? (
-                    "Procesando..."
-                  ) : (
-                    <>
-                      <FaCamera className="me-2" /> Capturar Rostro
-                    </>
-                  )}
-                </button>
-                <button
-                  className="btn btn-outline-secondary"
-                  onClick={() => setModoFacial(false)}
-                >
-                  <FaArrowLeft className="me-2" /> Volver
-                </button>
-              </div>
-            </motion.div>
+  <div className="d-flex justify-content-center gap-2 mt-3">
+    <button
+      className="btn btn-outline-secondary"
+      onClick={() => setModoFacial(false)}
+    >
+      <FaArrowLeft className="me-2" /> Volver
+    </button>
+  </div>
+</motion.div>
           )}
         </AnimatePresence>
       </div>

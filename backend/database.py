@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 # ============================================================
 # ⚙️ Configuración de la conexión a la base de datos
 # ============================================================
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:nosedice@localhost:3306/prueba"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:kevinlima@localhost:3306/sistema_autenticacion"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
