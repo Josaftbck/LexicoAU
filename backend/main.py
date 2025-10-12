@@ -32,9 +32,12 @@ app = FastAPI(
 # 🔹 Configurar CORS (para conexión con React y producción)
 # ============================================================
 origins = [
-    "http://localhost:5173",          # Frontend local
-    "http://127.0.0.1:5173",          # Alternativo
-    "https://lexion.daossystem.pro",  # Producción (DaosSystem)
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",      # 👈 nuevo puerto local
+    "http://127.0.0.1:5174",      # 👈 alternativo
+    "https://lexion.daossystem.pro",  # 👈 dominio producción
+    "https://lexion-daossystem-pro.up.railway.app",  # 👈 dominio Railway si ya lo tienes
 ]
 
 app.add_middleware(

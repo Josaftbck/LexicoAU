@@ -1,20 +1,30 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
 
-# ============================================================
-# ⚙️ Configuración de la conexión a la base de datos
-# ============================================================
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:kevinlima@localhost:3306/sistema_autenticacion"
+# ==============================================
+# 🔹 Cargar variables de entorno automáticamente
+# ==============================================
+env_file = ".env.prod" if os.getenv("PRODUCTION") == "true" else ".env.local"
+load_dotenv(env_file)
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("❌ No se encontró DATABASE_URL en el archivo .env")
+
+# ==============================================
+# ⚙️ Configuración de la conexión
+# ==============================================
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-
-# ============================================================
-# 📦 Dependencia para obtener sesión de base de datos
-# ============================================================
+# ==============================================
+# 📦 Dependencia para obtener sesión de DB
+# ==============================================
 def get_db():
     db = SessionLocal()
     try:
